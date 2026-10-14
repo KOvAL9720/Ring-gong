@@ -177,8 +177,8 @@ kbd{font-family:var(--ui);font-weight:700;border:1px solid var(--line);border-bo
     </div>
     <div class="note">
       <button class="btn small" id="testBtn" type="button">Vyskúšať zvuky</button>
-      <p>Dvojité zazvonenie začína a končí kolo, po poslednom kole zazvoní dvakrát za sebou, 10 sekúnd pred koncom kola zacinká zvonček a klepnú paličky, pípanie odpočíta posledné 3 sekundy prestávky. Na iPhone vypni tichý režim, inak zvuk nepočuť.</p>
-      <p>Verzia 8 · cinknutie pred koncom kola</p>
+      <p>Dvojité zazvonenie začína a končí kolo, po poslednom kole zazvoní dvakrát za sebou, 10 sekúnd pred koncom kola klepnú paličky, pípanie odpočíta posledné 3 sekundy prestávky. Na iPhone vypni tichý režim, inak zvuk nepočuť.</p>
+      <p>Verzia 9 · paličky pred koncom kola</p>
       <p class="hint-keys"><kbd>Medzerník</kbd> štart/pauza · <kbd>N</kbd> preskočiť · <kbd>R</kbd> reset</p>
     </div>
   </section>
@@ -204,7 +204,7 @@ const FIELDS=[
   {k:'work',name:'Dĺžka kola',min:10,max:600,th:60,small:5,big:15,f:v=>fmt(v)},
   {k:'rest',name:'Prestávka',min:0,max:300,th:60,small:5,big:15,f:v=>v?fmt(v):'bez'},
   {k:'rounds',name:'Počet kôl',min:1,max:30,th:99,small:1,big:1,f:v=>String(v)},
-  {k:'warn',name:'Cinknutie pred koncom kola',min:0,max:60,th:10,small:1,big:5,f:v=>v?v+' s':'vyp.'},
+  {k:'warn',name:'Paličky pred koncom kola',min:0,max:60,th:10,small:1,big:5,f:v=>v?v+' s':'vyp.'},
   {k:'prep',name:'Príprava pred 1. kolom',min:0,max:30,th:99,small:5,big:5,f:v=>v?v+' s':'bez'},
 ];
 
@@ -398,16 +398,10 @@ function knockAt(t){
   og.gain.setValueAtTime(.35,t); og.gain.exponentialRampToValueAtTime(0.0001,t+.06);
   o.connect(og).connect(master); o.start(t); o.stop(t+.07);
 }
-/* Malý zvonček „cink": jasný vysoký tón s krátkym doznievaním */
-function chimeAt(t,v=1){
-  [[1,.42,1.1],[2.76,.16,.5],[5.4,.07,.25]].forEach(([r,a,d])=>partial(t,1760*r,a*v,.002,d));
-  partial(t,1764,.25*v,.002,1);
-}
-/* Varovanie pred koncom kola: trikrát „cink" a potom klepnutie paličkami */
+/* Varovanie pred koncom kola: klepnutie paličkami */
 function sticks(){
   if(!S.sound||!ac) return; const t=ac.currentTime+.02;
-  [0,.22,.44].forEach(x=>chimeAt(t+x,1));
-  [0,.14,.42,.56].forEach(x=>knockAt(t+.9+x));
+  [0,.14,.42,.56].forEach(x=>knockAt(t+x));
 }
 function beep(hi){
   if(!S.sound||!ac) return; const t=ac.currentTime+.02;
