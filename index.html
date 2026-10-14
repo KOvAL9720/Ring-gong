@@ -177,8 +177,8 @@ kbd{font-family:var(--ui);font-weight:700;border:1px solid var(--line);border-bo
     </div>
     <div class="note">
       <button class="btn small" id="testBtn" type="button">Vyskúšať zvuky</button>
-      <p>Dvojité zazvonenie začína a končí kolo, po poslednom kole zazvoní dvakrát za sebou, 10 sekúnd pred koncom kola klepnú paličky, pípanie odpočíta posledné 3 sekundy prestávky. Na iPhone vypni tichý režim, inak zvuk nepočuť.</p>
-      <p>Verzia 9 · paličky pred koncom kola</p>
+      <p>Na začiatku kola zazvoní zvonec, 10 sekúnd pred koncom kola klepnú paličky a na konci kola zazvoní zvonec. Na iPhone vypni tichý režim a nechaj zapnutý displej.</p>
+      <p>Verzia 10 · zvonec, paličky, zvonec</p>
       <p class="hint-keys"><kbd>Medzerník</kbd> štart/pauza · <kbd>N</kbd> preskočiť · <kbd>R</kbd> reset</p>
     </div>
   </section>
@@ -423,7 +423,7 @@ function startPhase(p,dur,base){
 function next(base){
   if(st.phase==='prep'){ startPhase('work',S.work,base); ringBell(1); }
   else if(st.phase==='work'){
-    if(st.round>=S.rounds){ st.phase='done'; st.running=false; ringBell(2); sleep(); }
+    if(st.round>=S.rounds){ st.phase='done'; st.running=false; ringBell(1); sleep(); }
     else if(S.rest>0){ startPhase('rest',S.rest,base); ringBell(1); }
     else { st.round++; startPhase('work',S.work,base); ringBell(1); }
   }
@@ -452,7 +452,6 @@ function skip(){
 function cues(sec){
   if(st.lastSec===null) return;
   if(st.phase==='work'&&S.warn>0&&sec===S.warn&&S.warn<S.work) warnCue();
-  if((st.phase==='rest'||st.phase==='prep')&&sec>=1&&sec<=3) beepCue();
 }
 function tick(){
   if(st.running){
@@ -567,7 +566,7 @@ soundBtn.addEventListener('click',()=>{ S.sound=!S.sound; save(); renderSettings
 $('testBtn').addEventListener('click',()=>{
   ensureAudio(); if(!S.sound) return;
   const g=S.bell==='gong'||(S.bell==='custom'&&customBuf);
-  ringBell(1); setTimeout(warnCue,g?3200:2000); setTimeout(beepCue,g?4300:3100); setTimeout(()=>ringBell(1),g?4900:3700);
+  ringBell(1); setTimeout(warnCue,g?3200:2000); setTimeout(()=>ringBell(1),g?4900:3700);
 });
 
 /* ---------- controls ---------- */
