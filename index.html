@@ -42,7 +42,8 @@ body{background:var(--bg);color:var(--fg);font-family:var(--ui);font-size:16px;-
   min-height:100%;display:flex;flex-direction:column;
   padding-left:max(16px,env(safe-area-inset-left,0px));
   padding-right:max(16px,env(safe-area-inset-right,0px));
-  padding-block:10px 28px;
+  padding-top:max(10px,env(safe-area-inset-top,0px));
+  padding-bottom:max(28px,env(safe-area-inset-bottom,0px));
   background:
     radial-gradient(70% 45% at 50% -6%,color-mix(in srgb,var(--fg) 14%,transparent),transparent 70%),
     repeating-linear-gradient(45deg,color-mix(in srgb,var(--fence) 4%,transparent) 0 1px,transparent 1px 22px),
